@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>共生AI · 本周消费心理洞察</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple: #7C3AED;
+    --purple-light: #A78BFA;
+    --purple-dark: #5B21B6;
+    --bg-deep: #0F0A1F;
+    --bg-card: #1A1232;
+    --bg-card-hover: #221845;
+    --teal: #2DD4BF;
+    --teal-dim: rgba(45,212,191,0.15);
+    --amber: #F59E0B;
+    --amber-dim: rgba(245,158,11,0.15);
+    --red-soft: #F87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --green-soft: #34D399;
+    --green-dim: rgba(52,211,153,0.12);
+    --text-primary: #F1F0F7;
+    --text-secondary: #A9A5C0;
+    --text-dim: #6B6787;
+    --border: rgba(124,58,237,0.2);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .phone-frame {
+    max-width: 390px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 背景装饰 */
+  .bg-glow {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-glow-1 { top: -80px; right: -60px; background: var(--purple); }
+  .bg-glow-2 { top: 400px; left: -100px; background: var(--teal); opacity: 0.15; }
+  .bg-glow-3 { bottom: 100px; right: -50px; background: var(--amber); opacity: 0.1; }
+
+  /* 顶部导航 */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(15,10,31,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-back {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .nav-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .nav-action {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* 内容区域 */
+  .content {
+    position: relative;
+    z-index: 1;
+    padding: 0 16px 100px;
+  }
+
+  /* Hero 区域 */
+  .hero {
+    text-align: center;
+    padding: 28px 0 24px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    background: var(--teal-dim);
+    border: 1px solid rgba(45,212,191,0.25);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .hero-date {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .hero-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+  }
+  .hero-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+
+  /* 核心数据卡片 */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card.highlight {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(124,58,237,0.25) 0%, rgba(45,212,191,0.1) 100%);
+    border-color: rgba(124,58,237,0.35);
+  }
+  .stat-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  .stat-value.purple { color: var(--purple-light); }
+  .stat-value.teal { color: var(--teal); }
+  .stat-value.amber { color: var(--amber); }
+  .stat-value.green { color: var(--green-soft); }
+  .stat-unit {
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 2px;
+  }
+  .stat-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 4px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .stat-change.up { color: var(--green-soft); background: var(--green-dim); }
+  .stat-change.down { color: var(--red-soft); background: var(--red-dim); }
+  .stat-highlight-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  /* 通用卡片 */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    margin-bottom: 14px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .card-header-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .card-header-icon.purple-bg { background: rgba(124,58,237,0.2); }
+  .card-header-icon.teal-bg { background: var(--teal-dim); }
+  .card-header-icon.amber-bg { background: var(--amber-dim); }
+  .card-header-icon.green-bg { background: var(--green-dim); }
+  .card-header-title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  /* 时段热力图 */
+  .heatmap-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .heatmap-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .heatmap-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    width: 40px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .heatmap-bar-track {
+    flex: 1;
+    height: 24px;
+    background: rgba(124,58,237,0.08);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .heatmap-bar {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    transition: width 1s ease-out;
+  }
+  .heatmap-bar.level-1 { background: linear-gradient(90deg, rgba(124,58,237,0.3), rgba(124,58,237,0.5)); }
+  .heatmap-bar.level-2 { background: linear-gradient(90deg, rgba(124,58,237,0.5), rgba(167,139,250,0.6)); }
+  .heatmap-bar.level-3 { background: linear-gradient(90deg, rgba(167,139,250,0.6), rgba(245,158,11,0.5)); }
+  .heatmap-bar.level-4 { background: linear-gradient(90deg, rgba(245,158,11,0.5), rgba(248,113,113,0.7)); }
+
+  /* 情绪类型分布 */
+  .emotion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .emotion-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .emotion-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .emotion-info {
+    flex: 1;
+  }
+  .emotion-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .emotion-bar-track {
+    height: 6px;
+    background: rgba(124,58,237,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .emotion-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease-out;
+  }
+  .emotion-percent {
+    font-size: 12px;
+    font-weight: 700;
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* 洞察文字 */
+  .insight-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+  }
+  .insight-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .insight-text .highlight-purple {
+    color: var(--purple-light);
+    font-weight: 600;
+  }
+  .insight-text .highlight-teal {
+    color: var(--teal);
+    font-weight: 600;
+  }
+  .insight-text .highlight-amber {
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  /* 成长轨迹 */
+  .growth-visual {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 120px;
+    padding: 0 4px;
+    margin-bottom: 12px;
+  }
+  .growth-week {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .growth-bar-wrap {
+    width: 100%;
+    height: 90px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .growth-bar {
+    width: 70%;
+    max-width: 36px;
+    border-radius: 6px 6px 3px 3px;
+    position: relative;
+    transition: height 1s ease-out;
+  }
+  .growth-bar .bar-val {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .growth-label {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .growth-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--green-dim);
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: var(--radius-sm);
+  }
+  .growth-score-icon {
+    font-size: 24px;
+  }
+  .growth-score-text {
+    font-size: 13px;
+    color: var(--green-soft);
+    font-weight: 500;
+  }
+  .growth-score-text strong {
+    font-size: 22px;
+    font-weight: 900;
+  }
+
+  /* 建议列表 */
+  .advice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .advice-item {
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(124,58,237,0.06);
+    border: 1px solid rgba(124,58,237,0.12);
+    border-radius: var(--radius-sm);
+  }
+  .advice-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--purple);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .advice-content {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .advice-content strong {
+    color: var(--text-primary);
+  }
+
+  /* AI 对话气泡 */
+  .ai-message {
+    margin-top: 10px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(45,212,191,0.08));
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 16px 16px 16px 4px;
+    position: relative;
+  }
+  .ai-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .ai-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+  .ai-text .warm {
+    color: var(--amber);
+  }
+
+  /* 底部 CTA */
+  .bottom-cta {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    background: rgba(15,10,31,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+  }
+  .btn-secondary {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    flex: 2;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.3);
+  }
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* 分割线 */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0 16px;
+  }
+
+  /* 微信风格来源标记 */
+  .source-tag {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .source-tag-icon {
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: white;
+    font-weight: 700;
+  }
+  .source-tag-text {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- 导航栏 -->
+  <nav class="nav-bar">
+    <div class="nav-back">‹</div>
+    <div class="nav-title">消费心理洞察</div>
+    <div class="nav-action">⋯</div>
+  </nav>
+
+  <!-- 内容 -->
+  <div class="content">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        本周报告已生成
+      </div>
+      <div class="hero-date">2026.05.04 — 05.10</div>
+      <div class="hero-title">你的消费心理周报</div>
+      <div class="hero-subtitle">共生AI · 永远站在你这边</div>
+    </div>
+
+    <!-- 核心数据 -->
+    <div class="stats-grid">
+      <div class="stat-card highlight">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">本周为你省下</div>
+        <div class="stat-highlight-row">
+          <div class="stat-value teal">¥2,180</div>
+          <div class="stat-change up">↑ 67%</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛒</div>
+        <div class="stat-label">消费决策</div>
+        <div class="stat-value purple">12<span class="stat-unit">笔</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-label">冲动拦截</div>
+        <div class="stat-value amber">3<span class="stat-unit">次</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">↩️</div>
+        <div class="stat-label">成功退单</div>
+        <div class="stat-value green">2<span class="stat-unit">笔</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-label">决策力评分</div>
+        <div class="stat-value teal">78<span class="stat-unit">分</span></div>
+      </div>
+    </div>
+
+    <!-- 冲动触发时段 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon amber-bg">🌙</div>
+        <div class="card-header-title">冲动触发时段</div>
+      </div>
+      <div class="heatmap-container">
+        <div class="heatmap-row">
+          <div class="heatmap-label">20-21时</div>
+          <div class="heatmap-bar-track">
+            <div class="heatmap-bar level-1" style="width: 15%;">1次</div>
+          </div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">21-22时</div>
+          <div class="heatmap-bar-track">
+            <div class="heatmap-bar level-1" style="width: 20%;">1次</div>
+          </div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">22-23时</div>
+          <div class="heatmap-bar-track">
+            <div class="heatmap-bar level-3" style="width: 55%;">3次</div>
+          </div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">23-24时</div>
+          <div class="heatmap-bar-track">
+            <div class="heatmap-bar level-4" style="width: 75%;">4次</div>
+          </div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">0-1时</div>
+          <div class="heatmap-bar-track">
+            <div class="heatmap-bar level-3" style="width: 40%;">2次</div>
+          </div>
+        </div>
+        <div class="heatmap-row">
+          <div class="heatmap-label">1-2时</div>
+          <div class="heatmap-bar-track">
+            <div class="heatmap-bar level-1" style="width: 10%;">1次</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 情绪类型分布 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon purple-bg">💭</div>
+        <div class="card-header-title">情绪触发类型</div>
+      </div>
+      <div class="emotion-list">
+        <div class="emotion-item">
+          <div class="emotion-dot" style="background: #F87171;"></div>
+          <div class="emotion-info">
+            <div class="emotion-name">压力补偿型</div>
+            <div class="emotion-bar-track">
+              <div class="emotion-bar-fill" style="width: 55%; background: linear-gradient(90deg, #F87171, #FCA5A5);"></div>
+            </div>
+          </div>
+          <div class="emotion-percent" style="color: #F87171;">55%</div>
+        </div>
+        <div class="emotion-item">
+          <div class="emotion-dot" style="background: #A78BFA;"></div>
+          <div class="emotion-info">
+            <div class="emotion-name">孤独补偿型</div>
+            <div class="emotion-bar-track">
+              <div class="emotion-bar-fill" style="width: 25%; background: linear-gradient(90deg, #A78BFA, #C4B5FD);"></div>
+            </div>
+          </div>
+          <div class="emotion-percent" style="color: #A78BFA;">25%</div>
+        </div>
+        <div class="emotion-item">
+          <div class="emotion-dot" style="background: #FBBF24;"></div>
+          <div class="emotion-info">
+            <div class="emotion-name">FOMO型</div>
+            <div class="emotion-bar-track">
+              <div class="emotion-bar-fill" style="width: 12%; background: linear-gradient(90deg, #FBBF24, #FDE68A);"></div>
+            </div>
+          </div>
+          <div class="emotion-percent" style="color: #FBBF24;">12%</div>
+        </div>
+        <div class="emotion-item">
+          <div class="emotion-dot" style="background: #2DD4BF;"></div>
+          <div class="emotion-info">
+            <div class="emotion-name">从众型</div>
+            <div class="emotion-bar-track">
+              <div class="emotion-bar-fill" style="width: 8%; background: linear-gradient(90deg, #2DD4BF, #5EEAD4);"></div>
+            </div>
+          </div>
+          <div class="emotion-percent" style="color: #2DD4BF;">8%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模式洞察 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon teal-bg">🔮</div>
+        <div class="card-header-title">模式洞察</div>
+      </div>
+      <div class="insight-text">
+        你的冲动消费主要集中在<span class="highlight-amber">深夜23:00—01:00</span>，核心情绪是<span class="highlight-purple">学业压力补偿</span>。当你感到论文进度受阻时，解压类商品就成了你的情绪出口。<br><br>
+        好消息是：相比上周，冲动触发次数<span class="highlight-teal">减少了33%</span>——你正在学会在压力面前选择更健康的方式。这很了不起。
+      </div>
+    </div>
+
+    <!-- 成长轨迹 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon green-bg">📈</div>
+        <div class="card-header-title">成长轨迹</div>
+      </div>
+      <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 8px; padding-left: 4px;">近6周冲动消费金额趋势</div>
+      <div class="growth-visual">
+        <div class="growth-week">
+          <div class="growth-bar-wrap">
+            <div class="growth-bar" style="height: 85%; background: linear-gradient(180deg, rgba(248,113,113,0.7), rgba(248,113,113,0.3));">
+              <span class="bar-val" style="color: #F87171;">¥3.2k</span>
+            </div>
+          </div>
+          <div class="growth-label">第1周</div>
+        </div>
+        <div class="growth-week">
+          <div class="growth-bar-wrap">
+            <div class="growth-bar" style="height: 72%; background: linear-gradient(180deg, rgba(248,113,113,0.6), rgba(245,158,11,0.3));">
+              <span class="bar-val" style="color: #FBBF24;">¥2.7k</span>
+            </div>
+          </div>
+          <div class="growth-label">第2周</div>
+        </div>
+        <div class="growth-week">
+          <div class="growth-bar-wrap">
+            <div class="growth-bar" style="height: 60%; background: linear-gradient(180deg, rgba(245,158,11,0.6), rgba(245,158,11,0.3));">
+              <span class="bar-val" style="color: #FBBF24;">¥2.2k</span>
+            </div>
+          </div>
+          <div class="growth-label">第3周</div>
+        </div>
+        <div class="growth-week">
+          <div class="growth-bar-wrap">
+            <div class="growth-bar" style="height: 50%; background: linear-gradient(180deg, rgba(167,139,250,0.6), rgba(167,139,250,0.3));">
+              <span class="bar-val" style="color: #A78BFA;">¥1.8k</span>
+            </div>
+          </div>
+          <div class="growth-label">第4周</div>
+        </div>
+        <div class="growth-week">
+          <div class="growth-bar-wrap">
+            <div class="growth-bar" style="height: 38%; background: linear-gradient(180deg, rgba(45,212,191,0.6), rgba(45,212,191,0.3));">
+              <span class="bar-val" style="color: #2DD4BF;">¥1.4k</span>
+            </div>
+          </div>
+          <div class="growth-label">第5周</div>
+        </div>
+        <div class="growth-week">
+          <div class="growth-bar-wrap">
+            <div class="growth-bar" style="height: 28%; background: linear-gradient(180deg, rgba(52,211,153,0.7), rgba(52,211,153,0.3));">
+              <span class="bar-val" style="color: #34D399;">¥980</span>
+            </div>
+          </div>
+          <div class="growth-label">本周</div>
+        </div>
+      </div>
+      <div class="growth-score">
+        <div class="growth-score-icon">💪</div>
+        <div class="growth-score-text">心理韧性评分 <strong>78</strong> / 100</div>
+      </div>
+    </div>
+
+    <!-- 下周建议 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon purple-bg">✨</div>
+        <div class="card-header-title">下周建议</div>
+      </div>
+      <div class="advice-list">
+        <div class="advice-item">
+          <div class="advice-num">1</div>
+          <div class="advice-content"><strong>23:00设一个"睡前仪式"闹钟</strong>，到点后放下手机做10分钟冥想，替代刷淘宝的习惯</div>
+        </div>
+        <div class="advice-item">
+          <div class="advice-num">2</div>
+          <div class="advice-content">论文卡壳时，试试<strong>跟共生AI聊5分钟</strong>，比买解压玩具效果好，还免费 :)</div>
+        </div>
+        <div class="advice-item">
+          <div class="advice-num">3</div>
+          <div class="advice-content">下周三前<strong>把购物车里的3件"解压好物"移到收藏夹</strong>，3天后再看还想买再买</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI 的话 -->
+    <div class="card" style="border-color: rgba(124,58,237,0.3); background: linear-gradient(180deg, var(--bg-card), rgba(124,58,237,0.08));">
+      <div class="ai-message" style="background: none; border: none; padding: 0; margin: 0;">
+        <div class="ai-avatar">共</div>
+        <div class="ai-text">
+          6周前你每周冲动消费超过3000块，这周降到了980。你不是自制力变强了，<span class="warm">你是开始看见自己了。</span><br><br>
+          看见，就是改变的起点。下周继续来找我聊~
+        </div>
+      </div>
+      <div class="source-tag">
+        <div class="source-tag-icon">共</div>
+        <div class="source-tag-text">共生AI · 你的消费心理管家</div>
+      </div>
+    </div>
+
+  </div><!-- content -->
+
+  <!-- 底部 CTA -->
+  <div class="bottom-cta">
+    <div class="btn-secondary">分享给朋友</div>
+    <div class="btn-primary">和共生AI聊聊本周情况</div>
+  </div>
+
+</div><!-- phone-frame -->
+
+<script>
+  // 动画入场
+  document.addEventListener('DOMContentLoaded', () => {
+    // 热力图动画
+    document.querySelectorAll('.heatmap-bar').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0%';
+      setTimeout(() => { bar.style.width = w; }, 300);
+    });
+    // 情绪条动画
+    document.querySelectorAll('.emotion-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0%';
+      setTimeout(() => { bar.style.width = w; }, 500);
+    });
+    // 成长柱状图动画
+    document.querySelectorAll('.growth-bar').forEach((bar, i) => {
+      const h = bar.style.height;
+      bar.style.height = '0%';
+      setTimeout(() => { bar.style.height = h; }, 200 + i * 100);
+    });
+  });
+</script>
+
+</body>
+</html>
